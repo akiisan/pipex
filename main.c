@@ -6,85 +6,76 @@
 #include <fcntl.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include "Libft/libft.h"
 
-
-
-int main(int argc, char **argv)
+int getpath(char **env)
 {
-  int in, out;
-  char *cat_args[] = {"cat", NULL};
+  int i;
 
-  // open input and output files
+  i = 0;
 
-  in = open("in.txt", O_RDONLY);
-  out = open("out", O_WRONLY | O_TRUNC | O_CREAT, S_IRUSR | S_IRGRP | S_IWGRP | S_IWUSR);
+  while (env[i] && ft_strncmp("PATH",env[i],4) != 0)
 
-  // replace standard input with input file
 
-  dup2(in, 0);
+}
 
-  // replace standard output with output file
+int main(int argc, char **argv, char **envp)
+{
+  int in;
+  int out;
+  int fd[2];
+  pid_t child;
 
-  dup2(out, 1);
+  in = 0;
+  out = 0;
+  
+  if ((in = open(argv[1],O_RDONLY)) >= 1)
+    write(1,"SUCCESS OPEN IN FILE\n",22);
+  else
+    write(1,"ERROR OPEN IN FILE",9);
 
-  // close unused file descriptors
+  if (pipe(fd) == -1)
+    {
+      write(1,"failed pipe",12);
+      return (1);
+    }
+  if ((child = fork()) < 0)
+  {
+    write(1,"error fork",11);
+    return (1);
+  }
+  else if (child > 0) // Parent
+  {
+    close(fd[0]);
+    dup2(in,STDIN_FILENO);
+    dup2(fd[1],STDOUT_FILENO);
+    close(fd[1]);
+    execlp("cat", "cat", (char *)0);
+  }
+  else // Child
+  {
+    if ((out = open(argv[4],O_WRONLY | O_CREAT,0777)) <= 1)
+      write(1,"ERROR",6);
+    close(fd[1]);
+    dup2(fd[0],0);
+    dup2(out,1);
+    close(fd[0]);
 
-  close(in);
-  close(out);
+    execlp("wc", "wc", (char *)0);
+  }
 
-  // execute grep
 
-  execvp("cat", cat_args);
+
+
+
+
+
+
+
+
+  return (1);
 }
 
 
 
 
-
-
-
-
-
-/*
-int main(int argc, char **argv)
-  {
-   // Crée le pipe avec tableau de 2 fd 
-   int pfd[2];
-   //Alloue les deux fd du pipe
-    if (pipe(pfd) == -1)
-    {
-      printf("PIPE FAILED");
-      return (-1);
-    }
-
-    //Crée le processus enfant avec fonction fork 
-    int pid;
-    if ((pid = fork()) < 0)
-    {
-      printf("FORK FAILED");
-      return(-2);
-    } 
-
-    //Condition si je suis dans le processus enfant 
-    if (pid == 0)
-    {
-      char buffer[BUFSIZ];
-      close(pfd[1]); // Ferme l'entré du pipe enfant
-      if (read(pfd[0],buffer,BUFSIZ) != 0) //Lis la sortie pipe de l'enfant
-        printf("CHILD READ %s",buffer);
-      close(pfd[0]); // Ferme la sortie pipe enfant
-      exit(0);
-    }
-    else{
-      int fd;
-      char buffer[BUFSIZ];
-      close(pfd[0]);
-      fd = open("in.txt",O_RDONLY);
-      dup2(pfd[1],fd);
-      close(pfd[1]);
-
-    }
-    return (0);
-
-   
-  }*/
