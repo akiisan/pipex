@@ -52,9 +52,22 @@ void ft_execv(char **path,char **envp,char **argv)
     if (access(rpath, X_OK) == 0)
     {
       execve(rpath,argv,envp);
+      perror("Error execve");
+      exit(0);
     }
     i++;
   }
+  if (access(argv[0], X_OK) == 0)
+  {
+    execve(argv[0],argv,envp);
+    perror("Error execve");
+    exit(0);
+  }
+  else{
+    write(2,"command not found",18);
+    exit(0); 
+  }
+  
 }
 
 
@@ -75,26 +88,32 @@ int main(int argc, char **argv, char **envp)
   in = 0;
   out = 0;
   
+
+if (argc != 5)
+  {
+    write(1,"Error ARG",10);
+    return (0);
+  }
 if ((path =ft_getenv(envp)) == NULL)
   {
-    write(1,"error env var",14);
+    perror("failed get env variable");
     exit(0);
   }
 
-  if ((in = open(argv[1],O_RDONLY)) >= 1)
-    write(1,"SUCCESS OPEN IN FILE\n",22);
-  else
-    write(1,"ERROR OPEN IN FILE",9);
-
+  if ((in = open(argv[1],O_RDONLY)) <= 1)
+  {
+    perror("no such file");
+    return (0);
+  }
   if (pipe(fd) == -1)
     {
-      write(1,"failed pipe",12);
-      return (1);
+      perror("failed pipe");
+      return (0);
     }
   if ((child = fork()) < 0)
   {
-    write(1,"error fork",11);
-    return (1);
+    perror("failed fork");
+    return (0);
   }
   else if (child > 0) // Parent
   {
