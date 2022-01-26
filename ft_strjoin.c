@@ -5,12 +5,12 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: rasaboun <rasaboun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/10/17 12:24:56 by rasaboun          #+#    #+#             */
-/*   Updated: 2019/11/07 14:29:55 by rasaboun         ###   ########.fr       */
+/*   Created: 2021/08/06 16:47:19 by rasaboun          #+#    #+#             */
+/*   Updated: 2021/08/06 16:47:19 by rasaboun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "pipex.h"
 
 static int	ft_while(char *s3, const char *s1, int i)
 {
@@ -28,7 +28,7 @@ static int	ft_while(char *s3, const char *s1, int i)
 	return (p);
 }
 
-char		*ft_strjoin(char const *s1, char const *s2)
+char	*ft_strjoin(char const *s1, char const *s2)
 {
 	int		p;
 	char	*s3;
@@ -40,7 +40,8 @@ char		*ft_strjoin(char const *s1, char const *s2)
 	y = 0;
 	p = 0;
 	i = (int)ft_strlen(s1);
-	if (!(s3 = (char *)malloc(sizeof(char) * (i + ft_strlen(s2) + 1))))
+	s3 = (char *)malloc(sizeof(char) * (i + ft_strlen(s2) + 1));
+	if (!s3)
 		return (0);
 	p = ft_while(s3, s1, i);
 	y = 0;

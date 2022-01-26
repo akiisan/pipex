@@ -1,7 +1,0 @@
-Libft
-a.out
-in.txt
-main.c
-out.txt
-outfile
-pipex

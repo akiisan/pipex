@@ -1,27 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_bzero.c                                         :+:      :+:    :+:   */
+/*   ft_getenv.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rasaboun <rasaboun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/11/14 07:25:59 by rasaboun          #+#    #+#             */
-/*   Updated: 2019/11/12 18:35:56 by rasaboun         ###   ########.fr       */
+/*   Created: 2021/08/06 16:55:40 by rasaboun          #+#    #+#             */
+/*   Updated: 2021/08/06 16:55:41 by rasaboun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "pipex.h"
 
-void	ft_bzero(void *s, size_t n)
+char	**ft_getenv(char **env)
 {
-	int				i;
-	unsigned char	*str;
+	int		i;
+	int		m;
+	char	*allpath;
+	char	**spath;
 
+	allpath = NULL;
+	m = 0;
 	i = 0;
-	str = (unsigned char*)s;
-	while ((size_t)i < n)
-	{
-		str[i] = '\0';
+	spath = NULL;
+	while (env[i] != NULL && ft_strncmp("PATH", env[i], 4) != 0)
 		i++;
+	if (ft_strncmp("PATH", env[i], 4) == 0)
+	{
+		m = ft_strlen(env[i]);
+		allpath = ft_substr(env[i], 5, m);
+		spath = ft_split(allpath, ':');
+		free(allpath);
+		return (spath);
 	}
+	return (NULL);
 }

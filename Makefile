@@ -1,14 +1,14 @@
 NAME = pipex
 CC = gcc
 CCFLAGS = -Wall -Wextra -Werror
-SRC = main.c
+SRC = main.c ft_split.c ft_calloc.c ft_strjoin.c utils.c ft_getenv.c ft_execve.c
 OBJ=$(SRC:%.c=%.o)
 
 
 all: $(NAME)
 
 $(NAME): $(OBJ) 
-	gcc -o $(NAME) $(OBJ) Libft/libft.a
+	gcc -o $(NAME) $(OBJ)
 
 %.o: %.c
 	$(CC) -o $@ -c $< $(CFLAGS)
@@ -21,4 +21,4 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: clean fclean all libft
+.PHONY: clean fclean all
